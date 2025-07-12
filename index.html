@@ -4,29 +4,63 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
-  <title>JS Practice by Topic</title>
+  <title>JavaScript Practice by Topic</title>
 </head>
 <body>
   <h1>JavaScript Practice by Topic</h1>
   <p id="info"></p>
 
+  <!-- Topic Navigation -->
+  <h3>Select a Topic:</h3>
+  <ul>
+    <li><a href="?topic=01.Basic">01. Basic</a></li>
+    <li><a href="?topic=02.Variables">02. Variables</a></li>
+    <li><a href="?topic=03.Loops">03. Loops</a></li>
+  </ul>
+  
+  <!-- ADDED NAVIGATION CONTAINER -->
+  <div id="navigation"></div>
+
   <script>
+    const topicList = [
+      "01.Basic",
+      "02.Variables",
+      "03.Loops"
+    ];
+
     const params = new URLSearchParams(window.location.search);
-    const topic = params.get('topic');
+    const currentTopic = params.get('topic');
 
-    if (topic) {
-      document.getElementById('info').textContent = `Loading: ${topic}/index.js`;
+    // Build Navigation UI
+    const nav = document.getElementById("navigation");
+    if (currentTopic) {
+      const currentIndex = topicList.indexOf(currentTopic);
+      if (currentIndex > -1) {
+        const prev = topicList[currentIndex - 1];
+        const next = topicList[currentIndex + 1];
 
+        nav.innerHTML = `
+          ${prev ? `<a href="?topic=${prev}">⬅️ Previous</a>` : ""}
+          <strong style="margin: 0 10px;">${currentTopic}</strong>
+          ${next ? `<a href="?topic=${next}">Next ➡️</a>` : ""}
+        `;
+      }
+    } else {
+      nav.innerHTML = "<p>No topic selected. Please click a topic from above.</p>";
+    }
+
+    // Load topic script
+    if (currentTopic) {
       const script = document.createElement('script');
-      script.src = `./${topic}/index.js`;
+      script.src = `./${currentTopic}/index.js`;
       script.onerror = () => {
-        document.body.innerHTML += `<p style="color:red;">Failed to load ./${topic}/index.js</p>`;
+        document.body.innerHTML += `<p style="color:red;">Failed to load ./${currentTopic}/index.js</p>`;
       };
       document.body.appendChild(script);
-    } else {
-      document.getElementById('info').textContent = 'No topic specified. Add ?topic=01.Basic to the URL.';
     }
   </script>
+
+  <!-- LOAD HELPER AFTER CONTENT -->
+  <script src="./helpers/helper.js"></script>
 </body>
 </html>
-
