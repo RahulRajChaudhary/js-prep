@@ -4,12 +4,29 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
-  <title>JS Practice</title>
+  <title>JS Practice by Topic</title>
 </head>
 <body>
-  <h1>JavaScript Practice</h1>
-</body>
+  <h1>JavaScript Practice by Topic</h1>
+  <p id="info"></p>
 
-<!-- Change this path to test a different folder -->
-<script src="./01.Basic/index.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const topic = params.get('topic');
+
+    if (topic) {
+      document.getElementById('info').textContent = `Loading: ${topic}/index.js`;
+
+      const script = document.createElement('script');
+      script.src = `./${topic}/index.js`;
+      script.onerror = () => {
+        document.body.innerHTML += `<p style="color:red;">Failed to load ./${topic}/index.js</p>`;
+      };
+      document.body.appendChild(script);
+    } else {
+      document.getElementById('info').textContent = 'No topic specified. Add ?topic=01.Basic to the URL.';
+    }
+  </script>
+</body>
 </html>
+
